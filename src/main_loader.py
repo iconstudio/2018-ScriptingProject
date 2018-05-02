@@ -2,11 +2,26 @@ import math
 import os
 import xml
 import xmlrpc
+import xml.parsers.expat
 import json
 
 import tkinter
 from tkinter import font
 from tkinter import messagebox
+
+
+def start_element(name, attrs):
+	print('Start element:', name, attrs)
+
+def char_data(data):
+	print('Character data:', repr(data))
+
+
+pa = xml.parsers.expat.ParserCreate()
+pa.StartElementHandler = start_element  # 이벤트 핸들러 연결
+pa.CharacterDataHandler = char_data	 # 이벤트 핸들러 연결
+pa.Parse("""<?xml version="1.0"?><book ISBN="1111"><title>Loving Python</title></book>""")
+
 
 data_alert = []
 data_messages = []
