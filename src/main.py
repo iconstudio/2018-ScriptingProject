@@ -38,7 +38,7 @@ import main_loader
 try:
     if __name__ == "__main__":
         print("begins")
-        main_loader.initialize()
+
     else:
         raise RuntimeError
 except RuntimeError:
