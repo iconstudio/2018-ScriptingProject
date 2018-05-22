@@ -1,7 +1,8 @@
 import math
 import os
 import io
-
+import sys
+sys.path.append('included_header')
 from socket import *
 from urllib import *
 import urllib.request
@@ -77,7 +78,7 @@ label.pack()
 # label.config(image=image_async)
 label.place(x=0, y=0)
 
-Caption = tkinter.Label(window, font=Font, text="의무의 부름", anchor="left")
+Caption = tkinter.Label(window, font=Font, text="의무의 부름", anchor="w")
 Caption.pack()
 Caption.place(x=20, y=20)
 
