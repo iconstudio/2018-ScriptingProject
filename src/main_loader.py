@@ -78,9 +78,9 @@ label.pack()
 # label.config(image=image_async)
 label.place(x=0, y=0)
 
-Caption = tkinter.Label(window, font=Font, text="의무의 부름", anchor="w")
+Caption = tkinter.Label(window, font=Font, text="의무의 부름", anchor="w", justify = "center")
 Caption.pack()
-Caption.place(x=20, y=20)
+Caption.place(x=wx - len("의무의 부름"), y=wy)
 
 Caption = tkinter.Label(window, font=Font, text="목록")
 Caption.place(x=wx, y=20)
