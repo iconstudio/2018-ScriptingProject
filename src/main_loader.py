@@ -4,8 +4,8 @@ import io
 import sys
 sys.path.append('included_header')
 from socket import *
-from urllib import *
 import urllib.request
+import urllib.parse
 from PIL import Image, ImageTk
 import folium
 import xml
@@ -65,14 +65,17 @@ Font = font.Font(window, size=12, weight='normal', family='NanumGothic')
 
 image_async = None
 try:
-	url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
-	with urllib.request.urlopen(url) as u:
+	#url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
+	_army = "https://www.mma.go.kr/contents.do?mc=mma00020" + "{0}".format(46 + 1)
+	with urllib.request.urlopen(_army) as u:
 		raw_data = u.read()
-	im = Image.open(io.BytesIO(raw_data))
-	image_async = ImageTk.PhotoImage(im)
-except tkinter.TclError:
-	pass
+		print(u.info())
 
+	#im = Image.open(io.BytesIO(raw_data))
+	#image_async = ImageTk.PhotoImage(im)
+except tkinter.TclError:
+	print("happen")
+#
 label = tkinter.Label(window, font=Font, text="Test", height=400, width=400)
 label.pack()
 # label.config(image=image_async)
@@ -80,7 +83,7 @@ label.place(x=0, y=0)
 
 Caption = tkinter.Label(window, font=Font, text="의무의 부름", anchor="w", justify = "center")
 Caption.pack()
-Caption.place(x=wx - len("의무의 부름"), y=wy)
+Caption.place(x=wx - 70, y=wy)
 
 Caption = tkinter.Label(window, font=Font, text="목록")
 Caption.place(x=wx, y=20)
