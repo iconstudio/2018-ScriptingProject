@@ -1,22 +1,8 @@
-import math
-import os
-import io
-import sys
-sys.path.append('included_header')
-from socket import *
-import urllib.request
-import urllib.parse
-from PIL import Image, ImageTk
-import folium
-import xml
-import xmlrpc
-import xml.parsers.expat
-import json
-import pickle
+from import_file import *
+import petron_loader as pet
+import army_loader as army
 
-import tkinter
-from tkinter import font
-from tkinter import messagebox
+
 
 
 def start_element(name, attrs):
