@@ -1,0 +1,14 @@
+<bjdsgg>경상남도 의령군</bjdsgg>
+<bjdsggjusoCd>48720</bjdsggjusoCd>
+<bmggyakchingNm>은광학교</bmggyakchingNm>
+<bmgigwanCd>30000440</bmgigwanCd>
+<bokmuGgm>경남은광학교</bokmuGgm>
+<dpBokmuGgm>경남은광학교</dpBokmuGgm>
+<drmJuso>경상남도 의령군 홍의로</drmJuso>
+<ghjbcCd>11</ghjbcCd>
+<gtcdNm>경남</gtcdNm>
+<jeonhwaNo>055-572-8436</jeonhwaNo>
+<rnum>1</rnum>
+<sbjhjilbyeong>수형/정신과질환/경련성/문신자해</sbjhjilbyeong>
+<sbjjehanYn>Y</sbjjehanYn>
+<ssggdaeBr>지방자치단체</ssggdaeBr>
