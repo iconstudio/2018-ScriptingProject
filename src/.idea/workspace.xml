@@ -260,11 +260,11 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/included_header/folium/__init__.py</url>
+          <url />
           <line>12</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/../../python36-master%28위키북스_2018%29/python36-master(위키북스_2018)/python36-master/2부/16장/book.py</url>
+          <url />
           <line>1</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
