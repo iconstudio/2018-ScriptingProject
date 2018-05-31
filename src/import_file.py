@@ -21,6 +21,11 @@ import tkinter
 from tkinter import font
 from tkinter import messagebox
 
+wx = int((1920 - 960) * 0.5)
+wy = int((1080 - 540) * 0.5)
+px = int((1920 - 480) * 0.5)
+py = int((1080 - 540) * 0.5)
+
 
 class xml_open:
 	def __init__(self):
@@ -33,7 +38,7 @@ class xml_open:
 def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str, cmd=None) -> tkinter.Widget:
 	newbutton = tkinter.Button(hwnd, background="#CCCCCC", activebackground="#7A7A7A", highlightcolor="#7A7A7A", highlightthickness="2", disabledforeground="#FFFFFF", borderwidth="0", overrelief="flat", relief="flat", text=caption)
 	newbutton.pack()
-	newbutton.config(width=swidth, height=sheight, command=cmd)
+	newbutton.config(width=swidth, height=sheight, justify="center", command=cmd)
 	newbutton.place(x=nx, y=ny)
 	return newbutton
 

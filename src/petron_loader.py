@@ -3,21 +3,24 @@ from import_file import *
 window = None
 buttons = dict()
 
-wx = int((1920 - 960) * 0.5)
-wy = int((1080 - 540) * 0.5)
+class petron_component:
+	frame = None
+	button_quit = None
+	xml_url = ""
+	xml_pass = ""
+	search_key = ""
 
-
-class pet_cont:
 	def __init__(self, master):
 		self.master = master
-		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"  # 복무기관 입력키
-		self.xml_url = "http://apis.data.go.kr/1300000/bmggJeongBo/list"
 		self.loopflag = 1
 		self.docs = None
 		self.doms = None
-		self.search_key = urllib.parse.quote("경남")
 
-	def open_xml(self):
+	def xml_connect(self, url, passcode, key=""):
+		self.xml_url = url
+		self.xml_pass = passcode
+		self.search_key = key
+
 		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
 		try:
 			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass)
@@ -46,18 +49,27 @@ class pet_cont:
 				for i in cla:
 					print(i)
 
-	def open_window(self):
+	def window(self, newtitle:str):
+		global px, py
 		self.frame = tkinter.Toplevel(self.master)
-		self.quitButton = tkinter.Button(self.frame, text='Quit', width=25, command=self.close_windows)
-		self.quitButton.pack()
+		self.frame.title(newtitle)
+		self.frame.geometry("480x540+" + str(px) + "+" + str(py))
+		self.frame.resizable(0, 0)
+		self.frame.minsize(480, 540)
+		self.frame.maxsize(480, 540)
 
-	def close_windows(self):
-		self.master.destroy()
+		self.button_quit = make_button(self.frame, "종료", 208, 490, "6", "1", self.__del__)
+		# self.button_quit = tkinter.Button(self.frame, text='Quit', width=25, command=self.__del__)
+		# self.button_quit.pack()
+		return self.frame
+
+	def __del__(self):
+		self.frame.destroy()
 
 
 class pet_null:
 	frame = None
-	quitButton = None
+	button_quit = None
 
 	def __init__(self, master):
 		self.master = master
@@ -99,8 +111,8 @@ class pet_null:
 
 	def open_window(self):
 		self.frame = tkinter.Frame(self.master)
-		self.quitButton = tkinter.Button(self.frame, text='Quit', width=25, command=self.close_windows)
-		self.quitButton.pack()
+		self.button_quit = tkinter.Button(self.frame, text='Quit', width=25, command=self.close_windows)
+		self.button_quit.pack()
 		self.frame.pack()
 
 	def close_windows(self):
@@ -128,24 +140,75 @@ def buttons_hide_all():
 def main():
 	global window, wx, wy, global_font
 	window = tkinter.Tk()
-	window.title("Petron_window")
+	window.title("Call of Duty")
 	window.geometry("960x540+" + str(wx) + "+" + str(wy))
 	window.resizable(0, 0)
 	window.minsize(960, 540)
 	window.maxsize(960, 540)
-	global_font = font.Font(window, size=12, weight='normal', family='NanumGothic')
+	global_font = font.Font(window, size=14, weight='normal', family='NanumGothic')
 
-	roll = pet_cont(window)
-	roll.open_xml()
+	def make_popup(newtitle: str):
+		component = petron_component(window)
 
-	Caption = tkinter.Label(window, font=global_font, text="목록")
+		popup = component.window(newtitle)
+		return component, popup
+
+	def make_popup_military():
+		get = make_popup("현역 판정 검사 현황")
+		# get[0].xml_connect()
+
+		make_button(get[1], "<", 118, 400, "2", "2")
+		make_button(get[1], "조회", 218, 400, "4", "2")
+		make_button(get[1], ">", 338, 400, "2", "2")
+		return get[1]
+
+	def make_popup_milinfo():
+		get = make_popup("현역 정보")
+		return get[1]
+
+	def make_popup_path():
+		global global_font
+		get = make_popup("훈련소 가는 길")
+		# get[0].xml_connect()
+
+		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
+		InputLabel.pack()
+		InputLabel.place(x=14, y=96)
+
+		make_button(get[1], "검색", 106, 400, "4", "2")
+		make_button(get[1], "조회", 218, 400, "4", "2")
+		make_button(get[1], "청소", 338, 400, "4", "2")
+		return get[1]
+
+	def make_popup_pubinfo():
+		get = make_popup("사회 복무 정보")
+		get[0].xml_connect("http://apis.data.go.kr/1300000/bmggJeongBo/list", "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D", urllib.parse.quote("경남"))
+
+		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
+		InputLabel.pack()
+		InputLabel.place(x=14, y=96)
+
+		make_button(get[1], "검색", 106, 400, "4", "2")
+		make_button(get[1], "조회", 218, 400, "4", "2")
+		make_button(get[1], "청소", 338, 400, "4", "2")
+		return get[1]
+
+	def make_popup_calculator():
+		get = make_popup("근무 일자 계산")
+		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
+		InputLabel.pack()
+		InputLabel.place(x=14, y=96)
+
+		return get[1]
+
+	Caption = tkinter.Label(window, font=global_font, text="작업")
 	Caption.place(x=wx, y=20)
 
-	buttons["military"] = make_button(window, "현역 판정 검사", 280, 80, "18", "7", buttons_hide_all)
-	buttons["milinfo"] = make_button(window, "현역 정보", 280, 300, "18", "7")
-	buttons["path"] = make_button(window, "훈련소 가는 길", 488, 80, "18", "7")
-	buttons["pubinfo"] = make_button(window, "사회 복무 정보", 488, 300, "18", "7", roll.open_window)
-	buttons["calculator"] = make_button(window, "근무 일자\n계산", 8, 442, "10", "3")
+	buttons["military"] = make_button(window, "현역 판정 검사\n현황", 280, 80, "18", "7", make_popup_military)
+	buttons["milinfo"] = make_button(window, "현역 정보", 280, 300, "18", "7", make_popup_milinfo)
+	buttons["path"] = make_button(window, "훈련소 가는 길", 488, 80, "18", "7", make_popup_path)
+	buttons["pubinfo"] = make_button(window, "사회 복무 정보", 488, 300, "18", "7", make_popup_pubinfo)
+	buttons["calculator"] = make_button(window, "근무 일자\n계산", 8, 442, "10", "3", make_popup_calculator)
 
 	window.mainloop()
 
