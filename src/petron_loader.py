@@ -1,11 +1,16 @@
 from import_file import *
 
+window = None
+buttons = dict()
+
+wx = int((1920 - 960) * 0.5)
+wy = int((1080 - 540) * 0.5)
 
 
 class pet_cont:
 	def __init__(self, master):
 		self.master = master
-		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D" #복무기관 입력키
+		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"  # 복무기관 입력키
 		self.xml_url = "http://apis.data.go.kr/1300000/bmggJeongBo/list"
 		self.loopflag = 1
 		self.docs = None
@@ -49,11 +54,14 @@ class pet_cont:
 	def close_windows(self):
 		self.master.destroy()
 
+
 class pet_null:
+	frame = None
+	quitButton = None
 
 	def __init__(self, master):
 		self.master = master
-		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D" #복무공석 입력키
+		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"  # 복무공석 입력키
 		self.xml_url = "http://apis.data.go.kr/1300000/bistGongseok/list/bistGongseok/list"
 		self.loopflag = 1
 		self.docs = None
@@ -99,48 +107,48 @@ class pet_null:
 		self.master.destroy()
 
 
+def buttons_show_all():
+	global buttons
+	component_pack(buttons["military"])
+	component_pack(buttons["milinfo"])
+	component_pack(buttons["path"])
+	component_pack(buttons["pubinfo"])
+	component_pack(buttons["calculator"])
+
+
+def buttons_hide_all():
+	global buttons
+	component_hide(buttons["military"])
+	component_hide(buttons["milinfo"])
+	component_hide(buttons["path"])
+	component_hide(buttons["pubinfo"])
+	component_hide(buttons["calculator"])
+
 
 def main():
-	global wx, wy
+	global window, wx, wy, global_font
 	window = tkinter.Tk()
 	window.title("Petron_window")
 	window.geometry("960x540+" + str(wx) + "+" + str(wy))
 	window.resizable(0, 0)
 	window.minsize(960, 540)
 	window.maxsize(960, 540)
-	Font = font.Font(window, size=12, weight='normal', family='NanumGothic')
+	global_font = font.Font(window, size=12, weight='normal', family='NanumGothic')
 
 	roll = pet_cont(window)
 	roll.open_xml()
 
-	Caption = tkinter.Label(window, font=Font, text="목록")
+	Caption = tkinter.Label(window, font=global_font, text="목록")
 	Caption.place(x=wx, y=20)
 
-	button_military = tkinter.Button(window, text="공석 확인", command=None)
-	button_military.pack()
-	button_military.config(width="18", height="8")
-	button_military.place(x=480 - 200, y=80)
-
-	button_path = tkinter.Button(window, text="사회복무 회사 검색", command=roll.open_window)
-	button_path.pack()
-	button_path.config(width="18", height="8")
-	button_path.place(x=480 + 8, y=80)
-
-	button_milinfo = tkinter.Button(window, text="현역 정보", command=None)
-	button_milinfo.pack()
-	button_milinfo.config(width="18", height="8")
-	button_milinfo.place(x=480 - 200, y=300)
-
-	button_pubinfo = tkinter.Button(window, text="사회복무 정보", command=None)
-	button_pubinfo.pack()
-	button_pubinfo.config(width="18", height="8")
-	button_pubinfo.place(x=480 + 8, y=300)
+	buttons["military"] = make_button(window, "현역 판정 검사", 280, 80, "18", "7", buttons_hide_all)
+	buttons["milinfo"] = make_button(window, "현역 정보", 280, 300, "18", "7")
+	buttons["path"] = make_button(window, "훈련소 가는 길", 488, 80, "18", "7")
+	buttons["pubinfo"] = make_button(window, "사회 복무 정보", 488, 300, "18", "7", roll.open_window)
+	buttons["calculator"] = make_button(window, "근무 일자\n계산", 8, 442, "10", "3")
 
 	window.mainloop()
 
+
 if __name__ == '__main__':
-    main()
-
-
-
-
+	main()

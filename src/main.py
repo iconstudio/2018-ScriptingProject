@@ -1,39 +1,24 @@
-from main_loader import *
+from import_file import *
+import petron_loader as pet
+import army_loader as army
 
-'''
-        저작자: 
-        용도:   
-        기능:   1. 
-        필요 컴포넌트:
-                페이지
-                그림
-                버튼
-                목록
-                라벨
+# 현재 장면
+Scene = 0
+data_messages = []
 
-        흐름:
-                페이지 0 (주)
-                    넓직한 타일 버튼
-
-                    종료 버튼
-                    제작자 표시 버튼
-                페이지 1
-
-                    뒤로가기 버튼
-                페이지 2
-                    지도
-                    뒤로가기 버튼
-                페이지 3
-
-                    뒤로가기 버튼
-                페이지 4
-
-                    뒤로가기 버튼
-'''
+image_async = None
+try:
+	_army = "https://www.mma.go.kr/contents.do?mc=mma00020" + "{0}".format(46 + 1)
+	with urllib.request.urlopen(_army) as u:
+		raw_data = u.read()
+		print(u.info())
+except tkinter.TclError:
+	print("happen")
 
 try:
 	if __name__ == "__main__":
 		print("begins")
+		pet.main()
 	else:
 		raise RuntimeError
 except RuntimeError:
