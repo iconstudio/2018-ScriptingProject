@@ -56,6 +56,9 @@ class pet_cont:
 
 
 class pet_null:
+	frame = None
+	quitButton = None
+
 	def __init__(self, master):
 		self.master = master
 		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"  # 복무공석 입력키

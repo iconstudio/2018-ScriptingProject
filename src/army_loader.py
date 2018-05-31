@@ -53,7 +53,8 @@ class army_stick:
 class army_roll:
 	def __init__(self, master):
 		self.master = master
-		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"  # 서류준비 입력키
+		# 서류준비 입력키
+		self.xml_pass = "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D"
 		self.xml_url = "http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list"
 		self.loopflag = 1
 		self.docs = None
@@ -87,45 +88,6 @@ class army_roll:
 
 	def close_windows(self):
 		self.master.destroy()
-
-
-def main():
-	global wx, wy
-	window = tkinter.Tk()
-	window.title("army_window")
-	window.geometry("960x540+" + str(wx) + "+" + str(wy))
-	window.resizable(0, 0)
-	window.minsize(960, 540)
-	window.maxsize(960, 540)
-	Font = font.Font(window, size=12, weight='normal', family='NanumGothic')
-
-	roll = army_roll(window)
-	roll.open_xml()
-
-	Caption = tkinter.Label(window, font=Font, text="목록")
-	Caption.place(x=wx, y=20)
-
-	button_military = tkinter.Button(window, text="공석 확인", command=None)
-	button_military.pack()
-	button_military.config(width="18", height="8")
-	button_military.place(x=480 - 200, y=80)
-
-	button_path = tkinter.Button(window, text="사회복무 회사 검색", command=None)
-	button_path.pack()
-	button_path.config(width="18", height="8")
-	button_path.place(x=480 + 8, y=80)
-
-	button_milinfo = tkinter.Button(window, text="현역 정보", command=None)
-	button_milinfo.pack()
-	button_milinfo.config(width="18", height="8")
-	button_milinfo.place(x=480 - 200, y=300)
-
-	button_pubinfo = tkinter.Button(window, text="사회복무 정보", command=None)
-	button_pubinfo.pack()
-	button_pubinfo.config(width="18", height="8")
-	button_pubinfo.place(x=480 + 8, y=300)
-
-	window.mainloop()
 
 
 if __name__ == '__main__':
