@@ -146,3 +146,6 @@ button_pubinfo.place(x=480 + 8, y=300)
 
 
 window.mainloop()
+
+
+
