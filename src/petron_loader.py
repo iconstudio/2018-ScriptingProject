@@ -15,6 +15,8 @@ class petron_component:
 		self.loopflag = 1
 		self.docs = None
 		self.doms = None
+		self.childbody = None
+		self.childhead = None
 
 	def xml_connect(self, url, passcode, key=""):
 		self.xml_url = url
@@ -35,19 +37,19 @@ class petron_component:
 			print(parseString(e.read().decode('utf-8')).toprettyxml())
 		else:
 			with urllib.request.urlopen(pet_null) as t:
-				raw_data = t.read()
+				test_tree = ElementTree.ElementTree(file= t)
+				root = test_tree.getroot()
+
+				for i in root.iter("item"):
+					print("{0}".format(i.findtext("bjdsgg")))
 				t.close()
-				army_dom = parseString(raw_data)
-				row = army_dom.childNodes
-				pry = row[0].childNodes
-				head = pry[0].childNodes
-				cla = pry[1].childNodes
-				print("header")
-				for i in head:
-					print(i)
-				print("body")
-				for i in cla:
-					print(i)
+				raw_data = t.read()
+
+
+
+
+
+
 
 	def window(self, newtitle:str):
 		global px, py
@@ -187,6 +189,12 @@ def main():
 		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
 		InputLabel.pack()
 		InputLabel.place(x=14, y=96)
+
+		label1 = tkinter.Label(get[1], text = get[0].childbody)
+		label1.pack()
+
+
+
 
 		make_button(get[1], "검색", 106, 400, "4", "2")
 		make_button(get[1], "조회", 218, 400, "4", "2")

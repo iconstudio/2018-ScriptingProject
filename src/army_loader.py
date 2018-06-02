@@ -29,7 +29,10 @@ class army_stick:
 				raw_data = t.read()
 				t.close()
 				army_dom = parseString(raw_data)
+				ds = army_dom.getElementsByTagName('body')
 				row = army_dom.childNodes
+				for node in ds:
+					print(node.getElementsByTagName('item')[0].data)
 				pry = row[0].childNodes
 				head = pry[0].childNodes
 				cla = pry[1].childNodes
