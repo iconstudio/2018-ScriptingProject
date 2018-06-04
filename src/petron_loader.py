@@ -3,6 +3,8 @@ from import_file import *
 window = None
 buttons = dict()
 
+
+
 class petron_component:
 	frame = None
 	button_quit = None
@@ -17,6 +19,7 @@ class petron_component:
 		self.doms = None
 		self.childbody = None
 		self.childhead = None
+		self.nextpage = 1
 
 	def xml_connect(self, url, passcode, key=""):
 		self.xml_url = url
@@ -25,7 +28,8 @@ class petron_component:
 
 		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
 		try:
-			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass)
+			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
+											  +"&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(1000, 1000, self.nextpage)) # 이건 나중에 키 입력을 통해 변경할 수 있도록
 		except IOError:
 			print("null_error")
 			return None
@@ -38,18 +42,7 @@ class petron_component:
 		else:
 			with urllib.request.urlopen(pet_null) as t:
 				test_tree = ElementTree.ElementTree(file= t)
-				root = test_tree.getroot()
-
-				for i in root.iter("item"):
-					print("{0}".format(i.findtext("bjdsgg")))
-				t.close()
-				raw_data = t.read()
-
-
-
-
-
-
+				self.childbody = test_tree.getroot()
 
 	def window(self, newtitle:str):
 		global px, py
@@ -81,11 +74,17 @@ class pet_null:
 		self.docs = None
 		self.doms = None
 		self.search_key = urllib.parse.quote("경남")
+		self.childbody = None
+		self.nextpage = 1
+
+
+
 
 	def open_xml(self):
 		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
 		try:
-			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass)
+			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
+											  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(1000, 1000,self.nextpage))
 		except IOError:
 			print("null_error")
 			return None
@@ -97,28 +96,39 @@ class pet_null:
 			print(parseString(e.read().decode('utf-8')).toprettyxml())
 		else:
 			with urllib.request.urlopen(pet_null) as t:
-				raw_data = t.read()
-				t.close()
-				army_dom = parseString(raw_data)
-				row = army_dom.childNodes
-				pry = row[0].childNodes
-				head = pry[0].childNodes
-				cla = pry[1].childNodes
-				print("header")
-				for i in head:
-					print(i)
-				print("body")
-				for i in cla:
-					print(i)
+				test_tree = ElementTree.ElementTree(file=t)
+				self.childbody = test_tree.getroot()
+			# with urllib.request.urlopen(pet_null) as t:
+			#	raw_data = t.read()
+			#	t.close()
+			#	army_dom = parseString(raw_data)
+			#	row = army_dom.childNodes
+			#	pry = row[0].childNodes
+			#	head = pry[0].childNodes
+			#	cla = pry[1].childNodes#
+			#	print("header")
+			#	for i in head:
+			#		print(i)
+			#	print("body")
+			#	for i in cla:
+			#		print(i)
 
-	def open_window(self):
-		self.frame = tkinter.Frame(self.master)
-		self.button_quit = tkinter.Button(self.frame, text='Quit', width=25, command=self.close_windows)
-		self.button_quit.pack()
-		self.frame.pack()
+	def window(self, newtitle:str):
+		global px, py
+		self.frame = tkinter.Toplevel(self.master)
+		self.frame.title(newtitle)
+		self.frame.geometry("480x540+" + str(px) + "+" + str(py))
+		self.frame.resizable(0, 0)
+		self.frame.minsize(480, 540)
+		self.frame.maxsize(480, 540)
 
-	def close_windows(self):
-		self.master.destroy()
+		self.button_quit = make_button(self.frame, "종료", 208, 490, "6", "1", self.__del__)
+		# self.button_quit = tkinter.Button(self.frame, text='Quit', width=25, command=self.__del__)
+		# self.button_quit.pack()
+		return self.frame
+
+	def __del__(self):
+		self.frame.destroy()
 
 
 def buttons_show_all():
@@ -149,11 +159,18 @@ def main():
 	window.maxsize(960, 540)
 	global_font = font.Font(window, size=14, weight='normal', family='NanumGothic')
 
-	def make_popup(newtitle: str):
+	def make_popup_component(newtitle: str):
 		component = petron_component(window)
 
 		popup = component.window(newtitle)
 		return component, popup
+
+	def make_popup_null(newtitle: str):
+		comnull = pet_null(window)
+		comnull.open_xml()
+
+		popup = comnull.window(newtitle)
+		return comnull, popup
 
 	def make_popup_military():
 		get = make_popup("현역 판정 검사 현황")
@@ -183,15 +200,48 @@ def main():
 		return get[1]
 
 	def make_popup_pubinfo():
-		get = make_popup("사회 복무 정보")
-		get[0].xml_connect("http://apis.data.go.kr/1300000/bmggJeongBo/list", "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D", urllib.parse.quote("경남"))
+		get = make_popup_component("사회 복무 정보")
+		get[0].xml_connect("http://apis.data.go.kr/1300000/bmggJeongBo/list",
+						   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D", urllib.parse.quote("경남"))
+
+		check = make_popup_null("공석 조회")
+
 
 		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
 		InputLabel.pack()
 		InputLabel.place(x=14, y=96)
+		datalist = dict(bjdsgg = [], bokmuGgm = [], dpBokmuGgm = [], jeonhwaNo = [], sbjhjilbyeong = [], gtcdNm = [])
+		checklist = dict(bjdsggjusoNm = [], ghjbcNm= [], bmgigwanNm = [], shbmsojipDt = [])
 
-		label1 = tkinter.Label(get[1], text = get[0].childbody)
-		label1.pack()
+
+		#datalist_bjdsgg = [] # 지역
+		#datalist_bokmuGgm = [] #  복무기관명
+		#datalist_dpBokmuGgm = [] # 대표기관명
+		#datalist_jeonhwaNo = [] # 전화번호
+		#datalist_sbjhjilbyeong = [] # 선발제한질병
+
+
+		for i in get[0].childbody.iter("item"):
+			datalist["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
+			datalist["bokmuGgm"].append("{0}".format(i.findtext("bokmuGgm")))
+			datalist["dpBokmuGgm"].append("{0}".format(i.findtext("dpBokmuGgm")))
+			datalist["jeonhwaNo"].append("{0}".format(i.findtext("jeonhwaNo")))
+			datalist["sbjhjilbyeong"].append("{0}".format(i.findtext("sbjhjilbyeong")))
+			datalist["gtcdNm"].append("{0}".format(i.findtext("gtcdNm")))
+
+
+
+
+		for i in range(0, len(datalist["bjdsgg"])):
+			if datalist["gtcdNm"][i] == "서울":
+				print("지역 : {0}".format(datalist["bjdsgg"][i]))
+				print("복무기관명 : {0}".format(datalist["bokmuGgm"][i]))
+				print("대표기관명 : {0}".format(datalist["dpBokmuGgm"][i]))
+				print("전화번호 : {0}".format(datalist["jeonhwaNo"][i]))
+				print("기피질병 : {0}".format(datalist["sbjhjilbyeong"][i]))#
+
+
+
 
 
 
@@ -202,7 +252,7 @@ def main():
 		return get[1]
 
 	def make_popup_calculator():
-		get = make_popup("근무 일자 계산")
+		get = make_popup_null("근무 일자 계산")
 		InputLabel = tkinter.Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
 		InputLabel.pack()
 		InputLabel.place(x=14, y=96)
