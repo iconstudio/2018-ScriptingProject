@@ -1,6 +1,6 @@
 from import_file import *
 import petron_loader as pet
-import army_loader as army
+
 
 # 현재 장면
 Scene = 0

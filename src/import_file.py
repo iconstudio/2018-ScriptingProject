@@ -68,3 +68,61 @@ def openAPIparse(string, parser = None):
 	else:
 		from xml.dom import pulldom
 		return pulldom.parseString()
+
+
+class getxml:
+	frame = None
+	button_quit = None
+	xml_url = ""
+	xml_pass = ""
+	search_key = ""
+
+	def __init__(self, master : 'tkinter.Tk'):
+		self.master = master
+		self.loopflag = 1
+		self.docs = None
+		self.doms = None
+		self.childbody = None
+		self.childhead = None
+		self.nextpage = 1
+
+	def xml_connect(self, url : str, passcode : str, key=""):
+		self.xml_url = url
+		self.xml_pass = passcode
+		self.search_key = key
+
+		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
+		try:
+			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
+											  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(1000, 1000,
+																											self.nextpage))  # 이건 나중에 키 입력을 통해 변경할 수 있도록
+		except IOError:
+			print("null_error")
+			return None
+		except urllib.error.URLError as e:
+			print(e.reason)
+			print(parseString(e.read().decode('utf-8')).toprettyxml())
+		except urllib.error.HTTPError as e:
+			print("error code = " + e.reason)
+			print(parseString(e.read().decode('utf-8')).toprettyxml())
+		else:
+			with urllib.request.urlopen(pet_null) as t:
+				test_tree = ElementTree.ElementTree(file=t)
+				self.childbody = test_tree.getroot()
+
+	def window(self, newtitle: str):
+		global px, py
+		self.frame = tkinter.Toplevel(self.master)
+		self.frame.title(newtitle)
+		self.frame.geometry("480x540+" + str(px) + "+" + str(py))
+		self.frame.resizable(0, 0)
+		self.frame.minsize(480, 540)
+		self.frame.maxsize(480, 540)
+
+		self.button_quit = make_button(self.frame, "종료", 208, 490, "6", "1", self.__del__)
+		# self.button_quit = tkinter.Button(self.frame, text='Quit', width=25, command=self.__del__)
+		# self.button_quit.pack()
+		return self.frame
+
+	def __del__(self):
+		self.frame.destroy()
