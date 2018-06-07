@@ -11,6 +11,8 @@ class army_roll(getxml):
 
 	def __init__(self, master: 'tkinter.Tk'):
 		getxml.__init__(self, master)
+		self.datasize = 3588
+		self.pagesize = 3588
 
 
 def army_main():

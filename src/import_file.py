@@ -85,6 +85,8 @@ class getxml:
 		self.childbody = None
 		self.childhead = None
 		self.nextpage = 1
+		self.datasize = 1000
+		self.pagesize = 100
 
 	def xml_connect(self, url : str, passcode : str, key=""):
 		self.xml_url = url
@@ -94,7 +96,7 @@ class getxml:
 		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
 		try:
 			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
-											  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(1000, 1000,
+											  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(self.datasize, self.datasize,
 																											self.nextpage))  # 이건 나중에 키 입력을 통해 변경할 수 있도록
 		except IOError:
 			print("null_error")

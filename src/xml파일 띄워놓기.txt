@@ -1,0 +1,7 @@
+http://apis.data.go.kr/1300000/bmggJeongBo/list?serviceKey=4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D&numOfRows=10&pageSize=10&pageNo=1&startPage=1
+
+//사회복무
+
+http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list?serviceKey=4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D&numOfRows=10&pageSize=10&pageNo=1&startPage=1
+
+//문서 내는 군대
