@@ -6,12 +6,9 @@ import io
 sys.path.append('included_header')
 sys.path.append(".idea")
 
-from socket import *
+import webbrowser
 import urllib.request
 import urllib.parse
-import folium
-import json
-import pickle
 from xml.dom.minidom import parse, parseString
 from xml.etree import ElementTree
 import xml
@@ -24,7 +21,7 @@ from tkinter import *
 from tkinter import font
 
 
-def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str, cmd=None) -> Widget:
+def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str, cmd=None) -> Button:
 	newbutton = Button(hwnd, background="#CCCCCC", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
 	                   highlightthickness="2", disabledforeground="#FFFFFF", borderwidth="0", overrelief="flat",
 	                   relief="flat", text=caption)
@@ -34,7 +31,7 @@ def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str,
 	return newbutton
 
 
-def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Widget:
+def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Button:
 	newbutton = Button(hwnd, background="#CCCCCC", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
 	                   highlightthickness="2", disabledforeground="#FFFFFF", borderwidth="0", overrelief="flat",
 	                   relief="flat", text=caption)
@@ -43,11 +40,11 @@ def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: s
 	return newbutton
 
 
-def make_listbox(hwnd, r: int, c: int) -> Widget:
+def make_listbox(hwnd, r: int, c: int) -> Listbox:
 	scrollbar = Scrollbar(hwnd)
 	scrollbar.grid(row=r, column=c + 1, padx=0)
 
-	listbox = Listbox(hwnd, yscrollcommand=scrollbar.set)
+	listbox = Listbox(hwnd, borderwidth="0", relief="flat", activestyle='none', yscrollcommand=scrollbar.set)
 	listbox.grid(row=r, column=c, padx=0)
 
 	return listbox
@@ -105,10 +102,12 @@ class xml_parser:
 				test_tree = ElementTree.ElementTree(file=t)
 				self.childbody = test_tree.getroot()
 
-	def window(self, newtitle: str):
+	def window(self, newtitle: str) -> Widget:
 		self.frame = Toplevel(self.master)
 		self.frame.title(newtitle)
+		self.frame.geometry("480x540+%d+%d" % (80, 80))
 		self.frame.resizable(0, 0)
+		self.frame.minsize(480, 540)
 
 		self.button_quit = make_button_grid(self.frame, "종료", 5, 5, "8", "2", self.__del__).grid(sticky=W + E,
 		                                                                                         pady=10)
