@@ -68,7 +68,7 @@ def main():
 		return get[1]
 
 	def make_popup_milinfo():
-		get = make_popup("현역 정보")
+		get = make_popup("현역 서류")
 		get[0].xml_connect("http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list"
 		                   ,
 		                   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
@@ -99,8 +99,10 @@ def main():
 		                   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
 		                   urllib.parse.quote("경남"))
 
+		listbox = make_listbox(get[1], 0, 5)
 		InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-		InputLabel.grid(row=0, column=5)
+		InputLabel.grid(row=1, column=5)
+
 
 		datalist = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
 
@@ -126,9 +128,9 @@ def main():
 				print("전화번호 : {0}".format(datalist["jeonhwaNo"][i]))
 				print("기피질병 : {0}".format(datalist["sbjhjilbyeong"][i]))
 
-		make_button_grid(get[1], "검색", 1, 4, "4", "2")
-		make_button_grid(get[1], "조회", 1, 5, "4", "2")
-		make_button_grid(get[1], "청소", 1, 6, "4", "2")
+		make_button_grid(get[1], "검색", 2, 4, "4", "2")
+		make_button_grid(get[1], "조회", 2, 5, "4", "2")
+		make_button_grid(get[1], "청소", 2, 6, "4", "2")
 		return get[1]
 
 	def make_popup_calculator():

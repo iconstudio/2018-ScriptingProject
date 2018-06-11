@@ -105,9 +105,9 @@ class xml_parser:
 	def window(self, newtitle: str) -> Widget:
 		self.frame = Toplevel(self.master)
 		self.frame.title(newtitle)
-		self.frame.geometry("480x540+%d+%d" % (80, 80))
+		self.frame.geometry("600x540+%d+%d" % (80, 80))
 		self.frame.resizable(0, 0)
-		self.frame.minsize(480, 540)
+		self.frame.minsize(600, 540)
 
 		self.button_quit = make_button_grid(self.frame, "종료", 5, 5, "8", "2", self.__del__).grid(sticky=W + E,
 		                                                                                         pady=10)
