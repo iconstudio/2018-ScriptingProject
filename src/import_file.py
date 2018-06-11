@@ -44,11 +44,10 @@ def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: s
 
 
 def make_listbox(hwnd, r: int, c: int) -> Widget:
-	global global_font
 	scrollbar = Scrollbar(hwnd)
 	scrollbar.grid(row=r, column=c + 1, padx=0)
 
-	listbox = Listbox(hwnd, font=global_font, yscrollcommand=scrollbar.set)
+	listbox = Listbox(hwnd, yscrollcommand=scrollbar.set)
 	listbox.grid(row=r, column=c, padx=0)
 
 	return listbox
