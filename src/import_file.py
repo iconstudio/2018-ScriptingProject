@@ -18,10 +18,9 @@ from PIL import ImageTk as timage
 from tkinter import *
 from tkinter import font
 
-def make_text(hwnd, caption: str, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Text:
+def make_text(hwnd, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Text:
 	newtext = Text(hwnd, background="#000000", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
-	                   highlightthickness="2", borderwidth="0", overrelief="flat",
-	                   relief="flat", text=caption)
+	                   highlightthickness="2", borderwidth="0", overrelief="flat", relief="flat")
 	newtext.pack()
 	newtext.config(width=swidth, height=sheight, justify="center", command=cmd)
 	newtext.grid(row=r, column=c)
