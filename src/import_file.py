@@ -77,7 +77,7 @@ class xml_parser:
 		self.datasize = 1000
 		self.pagesize = 100
 
-	def xml_connect(self, url: str, passcode: str, key=""):
+	def xml_connect(self, url: str, passcode: str, key="", page: int = 1):
 		self.xml_url = url
 		self.xml_pass = passcode
 		self.search_key = key
@@ -86,7 +86,7 @@ class xml_parser:
 		try:
 			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
 			                                  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(
-				self.datasize, self.datasize,
+				self.datasize, page,
 				self.nextpage))  # 이건 나중에 키 입력을 통해 변경할 수 있도록
 		except IOError:
 			print("null_error")
