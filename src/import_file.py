@@ -16,6 +16,7 @@ import xmlrpc
 import xml.parsers.expat
 import http.client, http.server
 
+from PIL import Image, ImageTk
 import tkinter
 from tkinter import *
 from tkinter import font

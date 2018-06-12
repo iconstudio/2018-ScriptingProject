@@ -17,9 +17,10 @@ def main():
 	window.minsize(960, 540)
 	window.maxsize(960, 540)
 	window.configure(background='#ffffff')
-	tkpi = PhotoImage(file="background.jpg")
-	bg = Label(window, image=tkpi)
-	bg.place(x=0, y=0)
+
+	background_image = Image.open("background.jpg")
+	tkpi = ImageTk.PhotoImage(background_image)
+	bg = Label(image=tkpi)
 	bg.pack()
 
 	training_spot = [
