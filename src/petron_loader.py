@@ -23,6 +23,10 @@ def main():
 	bg = Label(image=tkpi)
 	bg.pack()
 
+	day_gabs = [
+		31, 28, 31, 30, 31, 30, 31, 31, 31, 30, 31, 30
+	]
+
 	training_spot = [
 		"전진", "노도", "백골", "열쇠", "청성", "칠성", "오뚜기", "백마", "화랑", "을지", "승리", "번개", "결전",
 		"백두산", "율곡", "철벽", "비룡", "불무리", "이기자", "태풍", "필승", "충장", "백룡", "충경", "백호", "충용",
@@ -103,6 +107,7 @@ def main():
 
 		listbox = make_listbox(get[1], 0, 5)
 		infobox = make_text(get[1], 1, 5, "20", "10")
+		infobox.insert(INSERT, " ")
 		infobox.configure(state=DISABLED)
 		inputbox = make_inputbox(get[1], global_font, 2, 5)
 		inputbox.focus_set()
@@ -130,8 +135,8 @@ def main():
 
 		def seek():
 			global chosen
-			clean()
 			result.clear()
+			clean()
 			seekness: str = inputbox.get()
 			if seekness != "":
 				if str.isdecimal(seekness):  # 전화 번호 검색
@@ -159,6 +164,7 @@ def main():
 			chosen = list(result)[listbox.curselection()[0]]
 
 			infobox.configure(state=NORMAL)
+			infobox.delete("1.0", END)
 			infobox.insert(INSERT, "기관명: [")
 			infobox.insert(INSERT, database["bokmuGgm"][chosen])
 			infobox.insert(INSERT, "]")
@@ -181,7 +187,7 @@ def main():
 			global chosen
 			chosen = 0
 			infobox.configure(state=NORMAL)
-			infobox.delete("0.0", END)
+			infobox.delete("1.0", END)
 			infobox.configure(state=DISABLED)
 			listbox.delete(0, END)
 
@@ -210,12 +216,31 @@ def main():
 		datebox.append(make_inputbox(get[1], global_font, 6, 4))  # 3
 		Label(get[1], font=global_font, text="21개월 경과: ", background='#0078D7').grid(row=0, column=4)
 		Label(get[1], font=global_font, text="년", background='#0078D7').grid(row=6, column=5)
+		datebox[3].configure(state=DISABLED)
 
 		datebox.append(make_inputbox(get[1], global_font, 7, 4))  # 4
 		Label(get[1], font=global_font, text="월", background='#0078D7').grid(row=7, column=5)
+		datebox[4].configure(state=DISABLED)
 
 		datebox.append(make_inputbox(get[1], global_font, 8, 4))  # 5
 		Label(get[1], font=global_font, text="일 까지", background='#0078D7').grid(row=8, column=5)
+		datebox[5].configure(state=DISABLED)
+
+		def calculate():
+			year: int = int(datebox[0].get())
+			month: int = int(datebox[1].get())
+			day: int = int(datebox[2].get())
+
+			datebox[3].configure(state=NORMAL)
+			datebox[3].configure(state=DISABLED)
+
+			datebox[4].configure(state=NORMAL)
+			datebox[4].configure(state=DISABLED)
+
+			datebox[5].configure(state=NORMAL)
+			datebox[5].configure(state=DISABLED)
+
+		make_button_grid(get[1], "계산", 9, 5, "4", "2", calculate)
 
 		return get[1]
 
