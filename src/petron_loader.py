@@ -191,10 +191,31 @@ def main():
 		return get[1]
 
 	def make_popup_calculator():
+		global global_font
+
 		get = make_popup("근무 일자 계산")
-		InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-		InputLabel.pack()
-		InputLabel.place(x=14, y=96)
+		datebox = []
+		Label(get[1], font=global_font, text="년-월-일 순서로 입력해주세요: ", background='#0078D7').grid(row=0, column=4)
+
+		datebox.append(make_inputbox(get[1], global_font, 1, 4))  # 0
+		Label(get[1], font=global_font, text="년", background='#0078D7').grid(row=1, column=5)
+
+		datebox.append(make_inputbox(get[1], global_font, 2, 4))  # 1
+		Label(get[1], font=global_font, text="월", background='#0078D7').grid(row=2, column=5)
+
+		datebox.append(make_inputbox(get[1], global_font, 3, 4))  # 2
+		Label(get[1], font=global_font, text="일 부터 ~ ", background='#0078D7').grid(row=3, column=5)
+		Label(get[1], font=global_font, text=" ", background='#0078D7').grid(row=4, column=5)
+
+		datebox.append(make_inputbox(get[1], global_font, 6, 4))  # 3
+		Label(get[1], font=global_font, text="21개월 경과: ", background='#0078D7').grid(row=0, column=4)
+		Label(get[1], font=global_font, text="년", background='#0078D7').grid(row=6, column=5)
+
+		datebox.append(make_inputbox(get[1], global_font, 7, 4))  # 4
+		Label(get[1], font=global_font, text="월", background='#0078D7').grid(row=7, column=5)
+
+		datebox.append(make_inputbox(get[1], global_font, 8, 4))  # 5
+		Label(get[1], font=global_font, text="일 까지", background='#0078D7').grid(row=8, column=5)
 
 		return get[1]
 

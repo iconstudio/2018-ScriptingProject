@@ -2,6 +2,7 @@ import math
 import sys
 import os
 import io
+import datetime
 
 import webbrowser
 import urllib.request
@@ -123,7 +124,7 @@ class xml_parser:
 		self.frame.resizable(0, 0)
 		self.frame.minsize(600, 700)
 
-		self.button_quit = make_button_grid(self.frame, "종료", 5, 5, "8", "2", self.__del__).grid(sticky=W + E,
+		self.button_quit = make_button_grid(self.frame, "종료", 10, 5, "8", "2", self.__del__).grid(sticky=W + E,
 		                                                                                         pady=10)
 		return self.frame
 
