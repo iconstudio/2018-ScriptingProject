@@ -77,7 +77,7 @@ class xml_parser:
 		self.datasize = 1000
 		self.pagesize = 100
 
-	def xml_connect(self, url: str, passcode: str, key="", page: int = 1):
+	def xml_connect(self, url: str, passcode: str, key="", page: int = 0):
 		self.xml_url = url
 		self.xml_pass = passcode
 		self.search_key = key
