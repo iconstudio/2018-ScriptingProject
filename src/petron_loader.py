@@ -100,11 +100,13 @@ def main():
 		                   urllib.parse.quote("경남"))
 
 		listbox = make_listbox(get[1], 0, 5)
-		InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-		InputLabel.grid(row=1, column=5)
+		inputbox = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
+		inputbox.grid(row=1, column=5)
 
-
-		datalist = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
+		choosen: int = 0
+		seekness: str = ""
+		result = set()
+		database = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
 
 		# datalist_bjdsgg = [] # 지역
 		# datalist_bokmuGgm = [] #  복무기관명
@@ -113,24 +115,57 @@ def main():
 		# datalist_sbjhjilbyeong = [] # 선발제한질병
 
 		for i in get[0].childbody.iter("item"):
-			datalist["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
-			datalist["bokmuGgm"].append("{0}".format(i.findtext("bokmuGgm")))
-			datalist["dpBokmuGgm"].append("{0}".format(i.findtext("dpBokmuGgm")))
-			datalist["jeonhwaNo"].append("{0}".format(i.findtext("jeonhwaNo")))
-			datalist["sbjhjilbyeong"].append("{0}".format(i.findtext("sbjhjilbyeong")))
-			datalist["gtcdNm"].append("{0}".format(i.findtext("gtcdNm")))
+			database["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
+			database["bokmuGgm"].append("{0}".format(i.findtext("bokmuGgm")))
+			database["dpBokmuGgm"].append("{0}".format(i.findtext("dpBokmuGgm")))
+			database["jeonhwaNo"].append("{0}".format(i.findtext("jeonhwaNo")))
+			database["sbjhjilbyeong"].append("{0}".format(i.findtext("sbjhjilbyeong")))
+			database["gtcdNm"].append("{0}".format(i.findtext("gtcdNm")))
+		data_size: int = int(len(database["bjdsgg"]))
 
-		for i in range(0, len(datalist["bjdsgg"])):
-			if datalist["gtcdNm"][i] == "서울":
-				print("지역 : {0}".format(datalist["bjdsgg"][i]))
-				print("복무기관명 : {0}".format(datalist["bokmuGgm"][i]))
-				print("대표기관명 : {0}".format(datalist["dpBokmuGgm"][i]))
-				print("전화번호 : {0}".format(datalist["jeonhwaNo"][i]))
-				print("기피질병 : {0}".format(datalist["sbjhjilbyeong"][i]))
+		for i in range(0, data_size):
+			# if database["gtcdNm"][i] == "서울":
+			print("지역 : {0}".format(database["bjdsgg"][i]))
+			print("복무기관명 : {0}".format(database["bokmuGgm"][i]))
+			print("대표기관명 : {0}".format(database["dpBokmuGgm"][i]))
+			print("전화번호 : {0}".format(database["jeonhwaNo"][i]))
+			print("기피질병 : {0}".format(database["sbjhjilbyeong"][i]))
 
-		make_button_grid(get[1], "검색", 2, 4, "4", "2")
-		make_button_grid(get[1], "조회", 2, 5, "4", "2")
-		make_button_grid(get[1], "청소", 2, 6, "4", "2")
+		def seek():
+			clean()
+			seekness = inputbox.get()
+			if seekness != "":
+				if str.isdecimal(seekness):  # 전화 번호 검색
+					for i in range(0, data_size):
+						if seekness in database["jeonhwaNo"][i]:
+							result.add(i)
+				else:
+					for i in range(0, data_size):  # 지역 검색
+						if seekness in database["bjdsgg"][i]:
+							result.add(i)
+
+					for i in range(0, data_size):  # 복무 기관 검색
+						if seekness in database["bokmuGgm"][i]:
+							result.add(i)
+
+				for i, item in enumerate(result):
+					listbox.insert(i, database["bokmuGgm"][item])
+
+				result.clear()
+				inputbox.delete(0, END)
+
+		def view():
+			choosen = listbox.curselection()
+			pass
+
+		def clean():
+			choosen = 0
+			listbox.delete(0, END)
+			result.clear()
+
+		make_button_grid(get[1], "검색", 2, 4, "4", "2", seek)
+		make_button_grid(get[1], "조회", 2, 5, "4", "2", view)
+		make_button_grid(get[1], "청소", 2, 6, "4", "2", clean)
 		return get[1]
 
 	def make_popup_calculator():
