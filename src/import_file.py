@@ -45,9 +45,9 @@ def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: s
 	return newbutton
 
 
-def make_inputbox(hwnd, r: int, c: int, cmd=None) -> Entry:
+def make_inputbox(hwnd, ofont, r: int, c: int, cmd=None) -> Entry:
 	global global_font
-	newinput = Entry(hwnd, font=global_font, borderwidth="0", relief='flat')
+	newinput = Entry(hwnd, font=ofont, borderwidth="0", relief='flat')
 	newinput.config(command=cmd)
 	newinput.grid(row=r, column=c)
 	return newinput

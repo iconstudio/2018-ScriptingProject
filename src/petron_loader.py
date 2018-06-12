@@ -95,17 +95,18 @@ def main():
 		return get[1]
 
 	def make_popup_pubinfo():
+		global choosen, global_font
 		get = make_popup("사회 복무 정보")
 		get[0].xml_connect("http://apis.data.go.kr/1300000/bmggJeongBo/list",
 		                   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
 		                   urllib.parse.quote("경남"))
 
 		listbox = make_listbox(get[1], 0, 5)
-		infobox = make_text(get[1], 1, 5, "20", "10")
-		inputbox = make_inputbox(get[1], 2, 5)#Entry(get[1], font=global_font, borderwidth="0", relief='flat')
+		infobox = make_text(get[1], 1, 5, "20", "10").configure(state='disabled')
+		inputbox = make_inputbox(get[1], global_font, 2, 5)
 		inputbox.focus_set()
 
-		choosen: int = 0
+		choosen = 0
 		result = set()
 		database = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
 
@@ -131,29 +132,32 @@ def main():
 			seekness: str = inputbox.get()
 			if seekness != "":
 				if str.isdecimal(seekness):  # 전화 번호 검색
-					for i in range(0, data_size):
-						if seekness in database["jeonhwaNo"][i]:
-							result.add(i)
+					for _i in range(0, data_size):
+						if seekness in database["jeonhwaNo"][_i]:
+							result.add(_i)
 				else:
-					for i in range(0, data_size):  # 지역 검색
-						if seekness in database["bjdsgg"][i]:
-							result.add(i)
+					for _j in range(0, data_size):  # 지역 검색
+						if seekness in database["bjdsgg"][_j]:
+							result.add(_j)
 
-					for i in range(0, data_size):  # 복무 기관 검색
-						if seekness in database["bokmuGgm"][i]:
-							result.add(i)
+					for _k in range(0, data_size):  # 복무 기관 검색
+						if seekness in database["bokmuGgm"][_k]:
+							result.add(_k)
 
-				for i, item in enumerate(result):
-					listbox.insert(i, database["bokmuGgm"][item])
+				for _l, item in enumerate(result):
+					listbox.insert(_l, database["bokmuGgm"][item])
 
 				result.clear()
 				inputbox.delete(0, END)
 
 		def view():
+			global choosen
 			choosen = listbox.curselection()
-			pass
+
+
 
 		def clean():
+			global choosen
 			choosen = 0
 			listbox.delete(0, END)
 			result.clear()
