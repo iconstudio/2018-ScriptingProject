@@ -24,7 +24,7 @@ def main():
 	bg.pack()
 
 	day_gabs = [
-		31, 28, 31, 30, 31, 30, 31, 31, 31, 30, 31, 30
+		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 	]
 
 	training_spot = [
@@ -214,30 +214,68 @@ def main():
 		Label(get[1], font=global_font, text=" ", background='#0078D7').grid(row=4, column=5)
 
 		datebox.append(make_inputbox(get[1], global_font, 6, 4))  # 3
-		Label(get[1], font=global_font, text="21개월 경과: ", background='#0078D7').grid(row=0, column=4)
+		Label(get[1], font=global_font, text="21개월 경과: ", background='#0078D7').grid(row=5, column=4)
 		Label(get[1], font=global_font, text="년", background='#0078D7').grid(row=6, column=5)
+		datebox[3].insert(INSERT, " ")
 		datebox[3].configure(state=DISABLED)
 
 		datebox.append(make_inputbox(get[1], global_font, 7, 4))  # 4
 		Label(get[1], font=global_font, text="월", background='#0078D7').grid(row=7, column=5)
+		datebox[4].insert(INSERT, " ")
 		datebox[4].configure(state=DISABLED)
 
 		datebox.append(make_inputbox(get[1], global_font, 8, 4))  # 5
 		Label(get[1], font=global_font, text="일 까지", background='#0078D7').grid(row=8, column=5)
+		datebox[5].insert(INSERT, " ")
 		datebox[5].configure(state=DISABLED)
 
 		def calculate():
-			year: int = int(datebox[0].get())
-			month: int = int(datebox[1].get())
-			day: int = int(datebox[2].get())
+			syear_before: str = datebox[0].get()
+			smonth_before: str = datebox[1].get()
+			sday_before: str = datebox[2].get()
+			print(syear_before, smonth_before, sday_before)
+			if syear_before == "" or smonth_before == "" or sday_before == "":
+				return
+			if not syear_before.isdigit() or not smonth_before.isdigit() or not sday_before.isdigit():
+				return
+
+			syear: int = int(syear_before)
+			smonth: int = int(smonth_before)
+			sday: int = int(sday_before)
+			if syear <= 0 or smonth <= 0 or smonth > 12 or sday <= 0 or sday > day_gabs[smonth]:
+				print(syear, smonth, sday)
+				return
+
+			daysum = 0
+			dayi = smonth - 1
+			daym = 0
+			while (True):
+				if daym >= 21:
+					break
+
+				daysum += day_gabs[dayi]
+				dayi += 1
+				if dayi > 11:
+					dayi = 0
+				daym += 1
+
+			begin = datetime.datetime(syear, smonth, sday, 9, 0, 0)
+			period = datetime.timedelta(days=daysum)
+			end = begin + period
 
 			datebox[3].configure(state=NORMAL)
+			datebox[3].delete(0, END)
+			datebox[3].insert(INSERT, str(end.year))
 			datebox[3].configure(state=DISABLED)
 
 			datebox[4].configure(state=NORMAL)
+			datebox[4].delete(0, END)
+			datebox[4].insert(INSERT, str(end.month))
 			datebox[4].configure(state=DISABLED)
 
 			datebox[5].configure(state=NORMAL)
+			datebox[5].delete(0, END)
+			datebox[5].insert(INSERT, str(end.day))
 			datebox[5].configure(state=DISABLED)
 
 		make_button_grid(get[1], "계산", 9, 5, "4", "2", calculate)
