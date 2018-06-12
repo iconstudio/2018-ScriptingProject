@@ -101,19 +101,13 @@ def main():
 		                   urllib.parse.quote("경남"))
 
 		listbox = make_listbox(get[1], 0, 5)
-		inputbox = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-		inputbox.grid(row=1, column=5)
+		infobox = make_text(get[1], 1, 5, "20", "10")
+		inputbox = make_inputbox(get[1], 2, 5)#Entry(get[1], font=global_font, borderwidth="0", relief='flat')
+		inputbox.focus_set()
 
 		choosen: int = 0
-		seekness: str = ""
 		result = set()
 		database = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
-
-		# datalist_bjdsgg = [] # 지역
-		# datalist_bokmuGgm = [] #  복무기관명
-		# datalist_dpBokmuGgm = [] # 대표기관명
-		# datalist_jeonhwaNo = [] # 전화번호
-		# datalist_sbjhjilbyeong = [] # 선발제한질병
 
 		for i in get[0].childbody.iter("item"):
 			database["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
@@ -134,7 +128,7 @@ def main():
 
 		def seek():
 			clean()
-			seekness = inputbox.get()
+			seekness: str = inputbox.get()
 			if seekness != "":
 				if str.isdecimal(seekness):  # 전화 번호 검색
 					for i in range(0, data_size):
@@ -164,9 +158,9 @@ def main():
 			listbox.delete(0, END)
 			result.clear()
 
-		make_button_grid(get[1], "검색", 2, 4, "4", "2", seek)
-		make_button_grid(get[1], "조회", 2, 5, "4", "2", view)
-		make_button_grid(get[1], "청소", 2, 6, "4", "2", clean)
+		make_button_grid(get[1], "검색", 3, 4, "4", "2", seek)
+		make_button_grid(get[1], "조회", 3, 5, "4", "2", view)
+		make_button_grid(get[1], "청소", 3, 6, "4", "2", clean)
 		return get[1]
 
 	def make_popup_calculator():

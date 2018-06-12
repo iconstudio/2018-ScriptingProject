@@ -18,13 +18,13 @@ from PIL import ImageTk as timage
 from tkinter import *
 from tkinter import font
 
+
 def make_text(hwnd, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Text:
-	newtext = Text(hwnd, background="#000000", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
-	                   highlightthickness="2", borderwidth="0", overrelief="flat", relief="flat")
-	newtext.pack()
-	newtext.config(width=swidth, height=sheight, justify="center", command=cmd)
+	newtext = Text(hwnd, background="#000000", borderwidth="0", relief="flat")
+	newtext.config(width=swidth, height=sheight, command=cmd)
 	newtext.grid(row=r, column=c)
 	return newtext
+
 
 def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str, cmd=None) -> Button:
 	newbutton = Button(hwnd, background="#CCCCCC", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
@@ -43,6 +43,14 @@ def make_button_grid(hwnd, caption: str, r: int, c: int, swidth: str, sheight: s
 	newbutton.config(width=swidth, height=sheight, justify="center", command=cmd)
 	newbutton.grid(row=r, column=c, pady=4, padx=4)
 	return newbutton
+
+
+def make_inputbox(hwnd, r: int, c: int, cmd=None) -> Entry:
+	global global_font
+	newinput = Entry(hwnd, font=global_font, borderwidth="0", relief='flat')
+	newinput.config(command=cmd)
+	newinput.grid(row=r, column=c)
+	return newinput
 
 
 def make_listbox(hwnd, r: int, c: int) -> Listbox:
@@ -110,9 +118,10 @@ class xml_parser:
 	def window(self, newtitle: str) -> Toplevel:
 		self.frame = Toplevel(self.master)
 		self.frame.title(newtitle)
-		self.frame.geometry("600x540+%d+%d" % (80, 80))
+		self.frame.geometry("600x700+%d+%d" % (80, 80))
+		self.frame.configure(background='#0078D7')
 		self.frame.resizable(0, 0)
-		self.frame.minsize(600, 540)
+		self.frame.minsize(600, 700)
 
 		self.button_quit = make_button_grid(self.frame, "종료", 5, 5, "8", "2", self.__del__).grid(sticky=W + E,
 		                                                                                         pady=10)
