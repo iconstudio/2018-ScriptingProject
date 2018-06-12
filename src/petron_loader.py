@@ -17,7 +17,7 @@ def main():
 	window.minsize(960, 540)
 	window.maxsize(960, 540)
 	window.configure(background='#ffffff')
-	tkpi = BitmapImage("background.jpg")
+	tkpi = PhotoImage(file="background.jpg")
 	bg = Label(window, image=tkpi)
 	bg.place(x=0, y=0)
 	bg.pack()

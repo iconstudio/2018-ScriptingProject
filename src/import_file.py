@@ -82,7 +82,6 @@ class xml_parser:
 		self.xml_pass = passcode
 		self.search_key = key
 
-		# +"&numOfRows=10&pageSize=10&pageNo=1&startPage=1" 이건 나중에 써보고 다시 편집
 		try:
 			pet_null = urllib.request.Request(self.xml_url + "?serviceKey=" + self.xml_pass
 			                                  + "&numOfRows={0}&pageSize={1}&pageNo={2}&startPage=1".format(
@@ -102,7 +101,7 @@ class xml_parser:
 				test_tree = ElementTree.ElementTree(file=t)
 				self.childbody = test_tree.getroot()
 
-	def window(self, newtitle: str) -> Widget:
+	def window(self, newtitle: str) -> Toplevel:
 		self.frame = Toplevel(self.master)
 		self.frame.title(newtitle)
 		self.frame.geometry("600x540+%d+%d" % (80, 80))
