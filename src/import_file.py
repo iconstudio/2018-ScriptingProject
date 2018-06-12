@@ -18,6 +18,15 @@ from PIL import ImageTk as timage
 from tkinter import *
 from tkinter import font
 
+def make_text(hwnd, caption: str, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Text:
+	newtext = Text(hwnd, background="#000000", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
+	                   highlightthickness="2", borderwidth="0", overrelief="flat",
+	                   relief="flat", text=caption)
+	newtext.pack()
+	newtext.config(width=swidth, height=sheight, justify="center", command=cmd)
+	newtext.grid(row=r, column=c)
+	return newtext
+
 def make_button(hwnd, caption: str, nx: int, ny: int, swidth: str, sheight: str, cmd=None) -> Button:
 	newbutton = Button(hwnd, background="#CCCCCC", activebackground="#7A7A7A", highlightcolor="#7A7A7A",
 	                   highlightthickness="2", disabledforeground="#FFFFFF", borderwidth="0", overrelief="flat",
