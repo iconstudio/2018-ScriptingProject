@@ -17,9 +17,10 @@ def main():
     window.minsize(960, 540)
     window.maxsize(960, 540)
     window.configure(background='#ffffff')
-    tkpi = BitmapImage("background.jpg")
-    bg = Label(window, image=tkpi)
-    bg.place(x=0, y=0)
+
+    background_image = pimage.open("background.jpg")
+    tkpi = timage.PhotoImage(background_image)
+    bg = Label(image=tkpi)
     bg.pack()
 
     training_spot = [
@@ -42,52 +43,70 @@ def main():
 
     def make_popup_military():
         get = make_popup("현역 정보")
-        get[0].xml_connect("http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list",
+        get[0].xml_connect("http://apis.data.go.kr/1300000//bjGiJun/list//bjGiJun/list",
                            "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
                            urllib.parse.quote("경남"))
+        listbox = make_listbox(get[1], 0, 5)
+        infobox = make_text(get[1], 1, 5, "20", "10").configure(state='disabled')
+        inputbox = make_inputbox(get[1], global_font, 2, 5)
+        inputbox.focus_set()
+        choosen_at = 0
+        result = set()
+        data_size_at = 0
 
-        InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-        InputLabel.grid(row=0, column=5)
+        datalist = dict(bjgijunGbnm=[], bjgjsangseNm=[], gunGbnm=[], gsteukgiNm=[], jeopsuSjdtm=[])
 
-        datalist = dict(gsteukgiCd=[], gsteukgiNm=[], gunGbnm=[], jcseoryuNm=[], mjbgteukgiNm=[])
+        for i in get[0].childbody.iter("item"):
+            datalist["bjgijunGbnm"].append("{0}".format(i.findtext("bjgijunGbnm")))
+            datalist["bjgjsangseNm"].append("{0}".format(i.findtext("bjgjsangseNm")))
+            datalist["gunGbnm"].append("{0}".format(i.findtext("gunGbnm")))
+            datalist["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
+            datalist["jeopsuSjdtm"].append("{0}".format(i.findtext("jeopsuSjdtm")))
+
+        data_size_at : int = len(datalist["bjgijunGbnm"])
+
+        def seek():
+            clean()
+            seekness: str = inputbox.get()
+            if seekness != "":
+                if str.isdecimal(seekness):  # 전화 번호 검색
+                    for _i in range(0, data_size_at):
+                        if seekness in datalist["bjgijunGbnm"][_i]:
+                            result.add(_i)
+                else:
+                    for _j in range(0, data_size_at):  # 지역 검색
+                        if seekness in datalist["bjgjsangseNm"][_j]:
+                            result.add(_j)
+
+                    for _k in range(0, data_size_at):  # 지역 검색
+                        if seekness in datalist["gunGbnm"][_k]:
+                            result.add(_k)
+
+                    for _l in range(0, data_size_at):
+                        if seekness in datalist["gsteukgiNm"][_l]:
+                            result.add(_l)
 
 
-        def movenext():
-            get[0].nextpage += 1
-            page_num.configure(text=get[0].nextpage)
+                for _l, item in enumerate(result):
+                    once_data = datalist["gsteukgiNm"][item] + "<" + datalist["gunGbnm"][item] + ">"
+                    listbox.insert(_l, once_data)
 
-        def printlist():
-            print(get[0].nextpage)
-            get[0].xml_connect("http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list",
-                               "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
-                               urllib.parse.quote("경남"))
-            for i in get[0].childbody.iter("item"):
-                datalist["gsteukgiCd"].append("{0}".format(i.findtext("gsteukgiCd")))
-                datalist["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
-                datalist["gunGbnm"].append("{0}".format(i.findtext("gunGbnm")))
-                datalist["jcseoryuNm"].append("{0}".format(i.findtext("jcseoryuNm")))
+                result.clear()
+                inputbox.delete(0, END)
 
-            print(datalist["gsteukgiCd"][0])
-            for i in range(0, len(datalist["gsteukgiCd"])):
-                print("군사 특기 코드 : {0}".format(datalist["gsteukgiCd"][i]))
-                print("군사 특기명 : {0}".format(datalist["gsteukgiNm"][i]))  # 기준1
-                print("해당 부서 : {0}".format(datalist["gunGbnm"][i]))  # 기준2
-                print("제출 서류 : {0}".format(datalist["jcseoryuNm"][i]))
+        def view():
+            global choosen_at
+            choosen_at = listbox.curselection()
 
-        def moveback():
-            global datalist
-            if get[0].nextpage > 0:
-                get[0].nextpage -= 1
-                page_num.configure(text=get[0].nextpage)
+        def clean():
+            global choosen_at
+            choosen_at = 0
+            listbox.delete(0, END)
+            result.clear()
 
-        get[1].update_idletasks()
-        time.sleep(2)
-
-        page_num = Label(get[1], text = get[0].nextpage)
-        page_num.grid(row = 4, column = 5)
-        make_button_grid(get[1], "<", 1, 4, "2", "2", moveback)
-        make_button_grid(get[1], "조회", 1, 5, "4", "2", printlist)
-        make_button_grid(get[1], ">", 1, 6, "2", "2", movenext)
+        make_button_grid(get[1], "검색", 6, 4, "4", "2", seek)
+        make_button_grid(get[1], "조회", 6, 5, "4", "2", view)
+        make_button_grid(get[1], "청소", 6, 6, "4", "2", clean)
         return get[1]
 
     def make_popup_milinfo():
@@ -96,6 +115,8 @@ def main():
                            ,
                            "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
                            urllib.parse.quote("경남"))
+
+
 
         make_button_grid(get[1], "<", 1, 4, "2", "2")
         make_button_grid(get[1], "조회", 1, 5, "4", "2")
@@ -117,42 +138,75 @@ def main():
         return get[1]
 
     def make_popup_pubinfo():
+        global choosen, global_font
         get = make_popup("사회 복무 정보")
         get[0].xml_connect("http://apis.data.go.kr/1300000/bmggJeongBo/list",
                            "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
                            urllib.parse.quote("경남"))
 
         listbox = make_listbox(get[1], 0, 5)
-        InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-        InputLabel.grid(row=1, column=5)
+        infobox = make_text(get[1], 1, 5, "20", "10").configure(state='disabled')
+        inputbox = make_inputbox(get[1], global_font, 2, 5)
+        inputbox.focus_set()
 
-        datalist = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[])
-
-        # datalist_bjdsgg = [] # 지역
-        # datalist_bokmuGgm = [] #  복무기관명
-        # datalist_dpBokmuGgm = [] # 대표기관명
-        # datalist_jeonhwaNo = [] # 전화번호
-        # datalist_sbjhjilbyeong = [] # 선발제한질병
+        choosen = 0
+        result = set()
+        database = dict(bjdsgg=[], bokmuGgm=[], dpBokmuGgm=[], jeonhwaNo=[], sbjhjilbyeong=[], gtcdNm=[], bjgjsangseNm = [])
 
         for i in get[0].childbody.iter("item"):
-            datalist["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
-            datalist["bokmuGgm"].append("{0}".format(i.findtext("bokmuGgm")))
-            datalist["dpBokmuGgm"].append("{0}".format(i.findtext("dpBokmuGgm")))
-            datalist["jeonhwaNo"].append("{0}".format(i.findtext("jeonhwaNo")))
-            datalist["sbjhjilbyeong"].append("{0}".format(i.findtext("sbjhjilbyeong")))
-            datalist["gtcdNm"].append("{0}".format(i.findtext("gtcdNm")))
+            database["bjdsgg"].append("{0}".format(i.findtext("bjdsgg")))
+            database["bokmuGgm"].append("{0}".format(i.findtext("bokmuGgm")))
+            database["dpBokmuGgm"].append("{0}".format(i.findtext("dpBokmuGgm")))
+            database["jeonhwaNo"].append("{0}".format(i.findtext("jeonhwaNo")))
+            database["sbjhjilbyeong"].append("{0}".format(i.findtext("sbjhjilbyeong")))
+            database["gtcdNm"].append("{0}".format(i.findtext("gtcdNm")))
+            database["bjgjsangseNm"].append("{0}".format(i.findtext("bjgjsangseNm")))
+        data_size: int = int(len(database["bjdsgg"]))
 
-        for i in range(0, len(datalist["bjdsgg"])):
-            if datalist["gtcdNm"][i] == "서울":
-                print("지역 : {0}".format(datalist["bjdsgg"][i]))
-                print("복무기관명 : {0}".format(datalist["bokmuGgm"][i]))
-                print("대표기관명 : {0}".format(datalist["dpBokmuGgm"][i]))
-                print("전화번호 : {0}".format(datalist["jeonhwaNo"][i]))
-                print("기피질병 : {0}".format(datalist["sbjhjilbyeong"][i]))
+        for i in range(0, data_size):
+            # if database["gtcdNm"][i] == "서울":
+            print("지역 : {0}".format(database["bjdsgg"][i]))
+            print("복무기관명 : {0}".format(database["bokmuGgm"][i]))
+            print("대표기관명 : {0}".format(database["dpBokmuGgm"][i]))
+            print("전화번호 : {0}".format(database["jeonhwaNo"][i]))
+            print("기피질병 : {0}".format(database["sbjhjilbyeong"][i]))
 
-        make_button_grid(get[1], "검색", 2, 4, "4", "2")
-        make_button_grid(get[1], "조회", 2, 5, "4", "2")
-        make_button_grid(get[1], "청소", 2, 6, "4", "2")
+        def seek():
+            clean()
+            seekness: str = inputbox.get()
+            #if seekness != "":
+            if str.isdecimal(seekness):  # 전화 번호 검색
+                for _i in range(0, data_size):
+                    if seekness in database["jeonhwaNo"][_i]:
+                        result.add(_i)
+            else:
+                for _j in range(0, data_size):  # 지역 검색
+                    if seekness in database["bjdsgg"][_j]:
+                        result.add(_j)
+
+                for _k in range(0, data_size):  # 복무 기관 검색
+                    if seekness in database["bokmuGgm"][_k]:
+                        result.add(_k)
+
+            for _l, item in enumerate(result):
+                listbox.insert(_l, database["bjgjsangseNm"][item])
+
+            result.clear()
+            inputbox.delete(0, END)
+
+        def view():
+            global choosen
+            choosen = listbox.curselection()
+
+        def clean():
+            global choosen
+            choosen = 0
+            listbox.delete(0, END)
+            result.clear()
+
+        make_button_grid(get[1], "검색", 3, 4, "4", "2", seek)
+        make_button_grid(get[1], "조회", 3, 5, "4", "2", view)
+        make_button_grid(get[1], "청소", 3, 6, "4", "2", clean)
         return get[1]
 
     def make_popup_calculator():
@@ -166,7 +220,7 @@ def main():
     Caption = Label(window, font=global_font, text="작업", background='#ffffff')
     Caption.place(x=10, y=20)
 
-    buttons["military"] = make_button(window, "현역 정보", 280, 80, "18", "7", make_popup_military)
+    buttons["military"] = make_button(window, "해군 정보", 280, 80, "18", "7", make_popup_military)
     buttons["milinfo"] = make_button(window, "현역 구비서류", 280, 300, "18", "7", make_popup_milinfo)
     buttons["path"] = make_button(window, "훈련소 가는 길", 488, 80, "18", "7", make_popup_path)
     buttons["pubinfo"] = make_button(window, "사회 복무 정보", 488, 300, "18", "7", make_popup_pubinfo)
