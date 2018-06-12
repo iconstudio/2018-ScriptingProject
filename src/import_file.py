@@ -20,7 +20,7 @@ from tkinter import font
 
 
 def make_text(hwnd, r: int, c: int, swidth: str, sheight: str, cmd=None) -> Text:
-	newtext = Text(hwnd, background="#000000", borderwidth="0", relief="flat")
+	newtext = Text(hwnd, fg="#FFFFFF", background="#000000", borderwidth="0", relief="flat")
 	newtext.config(width=swidth, height=sheight, command=cmd)
 	newtext.grid(row=r, column=c)
 	return newtext
