@@ -18,8 +18,8 @@ def main():
 	window.maxsize(960, 540)
 	window.configure(background='#ffffff')
 
-	background_image = Image.open("background.jpg")
-	tkpi = ImageTk.PhotoImage(background_image)
+	background_image = pimage.open("background.jpg")
+	tkpi = timage.PhotoImage(background_image)
 	bg = Label(image=tkpi)
 	bg.pack()
 

@@ -3,9 +3,6 @@ import sys
 import os
 import io
 
-sys.path.append('included_header')
-sys.path.append(".idea")
-
 import webbrowser
 import urllib.request
 import urllib.parse
@@ -16,8 +13,8 @@ import xmlrpc
 import xml.parsers.expat
 import http.client, http.server
 
-from PIL import Image, ImageTk
-import tkinter
+from PIL import Image as pimage
+from PIL import ImageTk as timage
 from tkinter import *
 from tkinter import font
 
