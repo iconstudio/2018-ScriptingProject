@@ -1,5 +1,6 @@
 from import_file import *
 import petron_loader as pet
+import encodings
 
 try:
     if __name__ == "__main__":
