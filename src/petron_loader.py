@@ -47,14 +47,13 @@ def main():
                            "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
                            urllib.parse.quote("경남"))
         listbox = make_listbox(get[1], 0, 5)
-        infobox = make_text(get[1], 1, 5, "20", "10").configure(state='disabled')
         inputbox = make_inputbox(get[1], global_font, 2, 5)
         inputbox.focus_set()
         choosen_at = 0
         result = set()
         data_size_at = 0
 
-        datalist = dict(bjgijunGbnm=[], bjgjsangseNm=[], gunGbnm=[], gsteukgiNm=[], jeopsuSjdtm=[])
+        datalist = dict(bjgijunGbnm=[], bjgjsangseNm=[], gunGbnm=[], gsteukgiNm=[], jeopsuSjdtm=[], jeopsuJrdtm = [], bjgijunDgnm = [])
 
         for i in get[0].childbody.iter("item"):
             datalist["bjgijunGbnm"].append("{0}".format(i.findtext("bjgijunGbnm")))
@@ -62,6 +61,8 @@ def main():
             datalist["gunGbnm"].append("{0}".format(i.findtext("gunGbnm")))
             datalist["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
             datalist["jeopsuSjdtm"].append("{0}".format(i.findtext("jeopsuSjdtm")))
+            datalist["jeopsuJrdtm"].append("{0}".format(i.findtext("jeopsuJrdtm")))
+            datalist["bjgijunDgnm"].append("{0}".format(i.findtext("bjgijunDgnm"))) #몇 개월 복무냐
 
         data_size_at : int = len(datalist["bjgijunGbnm"])
 
@@ -88,7 +89,7 @@ def main():
 
 
                 for _l, item in enumerate(result):
-                    once_data = datalist["gsteukgiNm"][item] + "<" + datalist["gunGbnm"][item] + ">"
+                    once_data = datalist["gsteukgiNm"][item] + "<" + datalist["gunGbnm"][item] + ">" + "기간 : " + datalist["bjgijunDgnm"][item]
                     listbox.insert(_l, once_data)
 
                 result.clear()
@@ -97,6 +98,21 @@ def main():
         def view():
             global choosen_at
             choosen_at = listbox.curselection()
+            print_detail = Label(get[1], text = datalist["bjgijunDgnm"][choosen_at[0]])
+            print_detail.grid(row = 6, column = 5)
+            print_detail = Label(get[1], text=datalist["bjgijunGbnm"][choosen_at[0]])
+            print_detail.grid(row = 7, column = 5)
+            print_detail = Label(get[1], text=datalist["bjgjsangseNm"][choosen_at[0]])
+            print_detail.grid(row = 8, column = 5)
+            print_detail = Label(get[1], text=datalist["gunGbnm"][choosen_at[0]])
+            print_detail.grid(row = 9, column = 5)
+            print_detail = Label(get[1], text=datalist["jeopsuSjdtm"][choosen_at[0]])
+            print_detail.grid(row = 10, column = 5)
+            print_detail = Label(get[1], text=datalist["jeopsuJrdtm"][choosen_at[0]])
+            print_detail.grid(row = 11, column = 5)
+
+
+
 
         def clean():
             global choosen_at
@@ -104,9 +120,10 @@ def main():
             listbox.delete(0, END)
             result.clear()
 
-        make_button_grid(get[1], "검색", 6, 4, "4", "2", seek)
-        make_button_grid(get[1], "조회", 6, 5, "4", "2", view)
-        make_button_grid(get[1], "청소", 6, 6, "4", "2", clean)
+
+        make_button_grid(get[1], "검색", 12, 4, "4", "2", seek)
+        make_button_grid(get[1], "조회", 12, 5, "4", "2", view)
+        make_button_grid(get[1], "청소", 12, 6, "4", "2", clean)
         return get[1]
 
     def make_popup_milinfo():
@@ -256,20 +273,20 @@ def main():
             infobox.configure(state=NORMAL)
             infobox.delete("1.0", END)
             infobox.insert(INSERT, "기관명: [")
-            infobox.insert(INSERT, database["bokmuGgm"][chosen])
+            infobox.insert(INSERT, database["bokmuGgm"][chosen[0]])
             infobox.insert(INSERT, "]")
             infobox.insert(INSERT, "\n")
             infobox.insert(INSERT, "주소:")
-            infobox.insert(INSERT, database["bjdsgg"][chosen])
+            infobox.insert(INSERT, database["bjdsgg"][chosen[0]])
             infobox.insert(INSERT, "\n")
             infobox.insert(INSERT, "대표 기관:")
-            infobox.insert(INSERT, database["dpBokmuGgm"][chosen])
+            infobox.insert(INSERT, database["dpBokmuGgm"][chosen[0]])
             infobox.insert(INSERT, "\n")
             infobox.insert(INSERT, "전화 번호:")
-            infobox.insert(INSERT, database["jeonhwaNo"][chosen])
+            infobox.insert(INSERT, database["jeonhwaNo"][chosen[0]])
             infobox.insert(INSERT, "\n")
             infobox.insert(INSERT, "*기피 질병:")
-            infobox.insert(INSERT, database["sbjhjilbyeong"][chosen])
+            infobox.insert(INSERT, database["sbjhjilbyeong"][chosen[0]])
             infobox.insert(INSERT, "\n")
             infobox.configure(state=DISABLED)
 
@@ -302,7 +319,3 @@ def main():
     buttons["calculator"] = make_button(window, "근무 일자\n계산", 8, 442, "10", "3", make_popup_calculator)
 
     window.mainloop()
-
-
-if __name__ == '__main__':
-    main()
