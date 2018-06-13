@@ -47,29 +47,69 @@ def main():
 
 	def make_popup_military():
 		get = make_popup("현역 정보")
-		get[0].xml_connect("http://apis.data.go.kr/1300000/gbSeoryu/list/gbSeoryu/list",
+		get[0].xml_connect("http://apis.data.go.kr/1300000//bjGiJun/list//bjGiJun/list",
 		                   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
 		                   urllib.parse.quote("경남"))
+		listbox = make_listbox(get[1], 0, 5)
+		infobox = make_text(get[1], 1, 5, "20", "10").configure(state='disabled')
+		inputbox = make_inputbox(get[1], global_font, 2, 5)
+		inputbox.focus_set()
+		choosen_at = 0
+		result = set()
+		data_size_at = 0
 
-		InputLabel = Entry(get[1], font=global_font, width=25, borderwidth=12, relief='flat')
-		InputLabel.grid(row=0, column=5)
+		datalist = dict(bjgijunGbnm=[], bjgjsangseNm=[], gunGbnm=[], gsteukgiNm=[], jeopsuSjdtm=[])
 
-		datalist = dict(gsteukgiCd=[], gsteukgiNm=[], gunGbnm=[], jcseoryuNm=[], mjbgteukgiNm=[])
 		for i in get[0].childbody.iter("item"):
-			datalist["gsteukgiCd"].append("{0}".format(i.findtext("gsteukgiCd")))
-			datalist["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
+			datalist["bjgijunGbnm"].append("{0}".format(i.findtext("bjgijunGbnm")))
+			datalist["bjgjsangseNm"].append("{0}".format(i.findtext("bjgjsangseNm")))
 			datalist["gunGbnm"].append("{0}".format(i.findtext("gunGbnm")))
-			datalist["jcseoryuNm"].append("{0}".format(i.findtext("jcseoryuNm")))
+			datalist["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
+			datalist["jeopsuSjdtm"].append("{0}".format(i.findtext("jeopsuSjdtm")))
 
-		for i in range(0, len(datalist["gsteukgiCd"])):
-			print("군사 특기 코드 : {0}".format(datalist["gsteukgiCd"][i]))
-			print("군사 특기명 : {0}".format(datalist["gsteukgiNm"][i]))  # 기준1
-			print("해당 부서 : {0}".format(datalist["gunGbnm"][i]))  # 기준2
-			print("제출 서류 : {0}".format(datalist["jcseoryuNm"][i]))
+		data_size_at: int = len(datalist["bjgijunGbnm"])
 
-		make_button_grid(get[1], "<", 1, 4, "2", "2")
-		make_button_grid(get[1], "조회", 1, 5, "4", "2")
-		make_button_grid(get[1], ">", 1, 6, "2", "2")
+		def seek():
+			clean()
+			seekness: str = inputbox.get()
+			if seekness != "":
+				if str.isdecimal(seekness):  # 전화 번호 검색
+					for _i in range(0, data_size_at):
+						if seekness in datalist["bjgijunGbnm"][_i]:
+							result.add(_i)
+				else:
+					for _j in range(0, data_size_at):  # 지역 검색
+						if seekness in datalist["bjgjsangseNm"][_j]:
+							result.add(_j)
+
+					for _k in range(0, data_size_at):  # 지역 검색
+						if seekness in datalist["gunGbnm"][_k]:
+							result.add(_k)
+
+					for _l in range(0, data_size_at):
+						if seekness in datalist["gsteukgiNm"][_l]:
+							result.add(_l)
+
+				for _l, item in enumerate(result):
+					once_data = datalist["gsteukgiNm"][item] + "<" + datalist["gunGbnm"][item] + ">"
+					listbox.insert(_l, once_data)
+
+				result.clear()
+				inputbox.delete(0, END)
+
+		def view():
+			global choosen_at
+			choosen_at = listbox.curselection()
+
+		def clean():
+			global choosen_at
+			choosen_at = 0
+			listbox.delete(0, END)
+			result.clear()
+
+		make_button_grid(get[1], "검색", 6, 4, "4", "2", seek)
+		make_button_grid(get[1], "조회", 6, 5, "4", "2", view)
+		make_button_grid(get[1], "청소", 6, 6, "4", "2", clean)
 		return get[1]
 
 	def make_popup_milinfo():
@@ -78,10 +118,67 @@ def main():
 		                   ,
 		                   "4954u%2BzYV4y%2F5BRah3wXrxdhkbCaLFoKjzT7dLDNPzn44g%2BUeL30JEGzj2MitqPY9PMyqdb8yW4%2F8eo4xB1xYw%3D%3D",
 		                   urllib.parse.quote("경남"))
+		listbox_txt = make_listbox(get[1], 0, 5)
+		inputbox_txt = make_inputbox(get[1], global_font, 2, 5)
+		inputbox_txt.focus_set()
+		listbox_txt.size()
+		choosen_txt = 0
+		result_txt = set()
+		data_size_txt = 0
+		datalist_txt = dict(gsteukgiCd=[], gsteukgiNm=[], jcseoryuNm=[], gunGbnm=[], mjgubun=[])
 
-		make_button_grid(get[1], "<", 1, 4, "2", "2")
-		make_button_grid(get[1], "조회", 1, 5, "4", "2")
-		make_button_grid(get[1], ">", 1, 6, "2", "2")
+		for i in get[0].childbody.iter("item"):
+			datalist_txt["gsteukgiCd"].append("{0}".format(i.findtext("gsteukgiCd")))
+			datalist_txt["gsteukgiNm"].append("{0}".format(i.findtext("gsteukgiNm")))
+			datalist_txt["gunGbnm"].append("{0}".format(i.findtext("gunGbnm")))
+			datalist_txt["jcseoryuNm"].append("{0}".format(i.findtext("jcseoryuNm")))
+			datalist_txt["mjgubun"].append("{0}".format(i.findtext("mjgubun")))
+
+		data_size_txt: int = len(datalist_txt["gsteukgiCd"])
+
+		def seek():
+			clean()
+			result_txt.clear()
+			seekness: str = inputbox_txt.get()
+			if seekness != "":
+				if str.isdecimal(seekness):  # 전화 번호 검색
+					for _i in range(0, data_size_txt):
+						if seekness in datalist_txt["gsteukgiCd"][_i]:
+							result_txt.add(_i)
+				else:
+					for _j in range(0, data_size_txt):  # 지역 검색
+						if seekness in datalist_txt["gsteukgiNm"][_j]:
+							result_txt.add(_j)
+
+					for _k in range(0, data_size_txt):  # 지역 검색
+						if seekness in datalist_txt["gunGbnm"][_k]:
+							result_txt.add(_k)
+
+					for _l in range(0, data_size_txt):
+						if seekness in datalist_txt["jcseoryuNm"][_l]:
+							result_txt.add(_l)
+
+				for _l, item in enumerate(result_txt):
+					once_data = datalist_txt["jcseoryuNm"][item]
+					listbox_txt.insert(_l, once_data)
+
+				inputbox_txt.delete(0, END)
+
+		def view():
+			global choosen_txt
+			choosen_txt = list(result_txt)[listbox_txt.curselection()[0]]
+			webbrowser.open("https://www.google.co.kr/search?q=" + datalist_txt["jcseoryuNm"][choosen_txt])
+
+		def clean():
+			global choosen_txt
+			choosen_txt = 0
+			listbox_txt.delete(0, END)
+			result_txt.clear()
+
+		make_button_grid(get[1], "검색", 3, 4, "4", "2", seek)
+		make_button_grid(get[1], "조회", 3, 5, "4", "2", view)
+		make_button_grid(get[1], "청소", 3, 6, "4", "2", clean)
+
 		return get[1]
 
 	def make_popup_path():
